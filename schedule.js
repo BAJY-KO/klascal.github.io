@@ -830,7 +830,7 @@ function displaySchedule(scheduleData) {
                           ? "cancelled"
                           : appointment.appointmentType
                       }${ltr}">
-              <p>
+              <p class="lesRegel">
                 <strong>${
                   appointment.appointmentType === "exam"
                     ? appointment.schedulerRemark.split(":")[1]
@@ -838,8 +838,8 @@ function displaySchedule(scheduleData) {
                 }</strong>
                 <strong class="lesuur">${parseInt(appointment.startTimeSlotName)}</strong>
               </p>
-              <p class="lestijden" style="${styling}">${startTime}${endTime}</p>
-              <span>
+              <p class="lestijden lesRegel" style="${styling}">${startTime}${endTime}</p>
+              <span class="lesRegel">
                 ${locations.join(", ")} ${
             teachers === "()" ? "" : teachers
           }
@@ -848,10 +848,10 @@ function displaySchedule(scheduleData) {
                   <span class="warningMessage">${warning}</span>
                 </div>
               </span>
-              <p class="className">
+              <p class="className lesRegel">
                 ${groups.join(", ")}
               </p>
-              <p class="subjectName">
+              <p class="subjectName lesRegel">
                 ${subjects.join(",")}
               </p>
             </div>`;
@@ -949,6 +949,22 @@ function displaySchedule(scheduleData) {
       }
     }
   }
+  
+  // Verklein de lettergrootte van een tekstregel als deze tekstregel over twee regels verspreid is, zodat de tekstregel op één regel past
+  for (const el of document.querySelectorAll(".lesRegel")) {
+	let fontSize = parseInt(getComputedStyle(el).fontSize);
+	for (let i = fontSize; i >= 0; i--) {
+	  if (isWrappedLine(el)) {
+		fontSize--;
+		el.style.fontSize = fontSize + "px";
+	  }
+	}
+  }
+}
+
+// Functie om te kijken of een regel naar de volgende regel wrapt
+function isWrappedLine(el) {
+    return el.scrollHeight < el.offsetHeight;
 }
 
 // Functie om foutmelding weer te geven
